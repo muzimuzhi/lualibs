@@ -9,7 +9,6 @@ if not modules then modules = { } end modules ['l-unicode'] = {
 -- this module will be reorganized
 
 -- todo: utf.sub replacement (used in syst-aux)
-
 -- we put these in the utf namespace:
 
 utf = utf or (unicode and unicode.utf8) or { }
@@ -935,19 +934,27 @@ end
 local _, l_remap = utf.remapper(little)
 local _, b_remap = utf.remapper(big)
 
-function utf.utf8_to_utf16_be(str)
-    return char(254,255) .. lpegmatch(b_remap,str)
-end
-
-function utf.utf8_to_utf16_le(str)
-    return char(255,254) .. lpegmatch(l_remap,str)
-end
-
-function utf.utf8_to_utf16(str,littleendian)
-    if littleendian then
-        return utf.utf8_to_utf16_le(str)
+function utf.utf8_to_utf16_be(str,nobom)
+    if nobom then
+        return lpegmatch(b_remap,str)
     else
-        return utf.utf8_to_utf16_be(str)
+        return char(254,255) .. lpegmatch(b_remap,str)
+    end
+end
+
+function utf.utf8_to_utf16_le(str,nobom)
+    if nobom then
+        return lpegmatch(l_remap,str)
+    else
+        return char(255,254) .. lpegmatch(l_remap,str)
+    end
+end
+
+function utf.utf8_to_utf16(str,littleendian,nobom)
+    if littleendian then
+        return utf.utf8_to_utf16_le(str,nobom)
+    else
+        return utf.utf8_to_utf16_be(str,nobom)
     end
 end
 
@@ -1121,4 +1128,14 @@ if not utf.values then
 
     string.utfvalues = utf.values
 
+end
+
+function utf.chrlen(u) -- u is number
+    return
+        (u < 0x80 and 1) or
+        (u < 0xE0 and 2) or
+        (u < 0xF0 and 3) or
+        (u < 0xF8 and 4) or
+        (u < 0xFC and 5) or
+        (u < 0xFE and 6) or 0
 end

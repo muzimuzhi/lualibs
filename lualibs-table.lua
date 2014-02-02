@@ -129,10 +129,13 @@ local function sortedhash(t,cmp)
             s = sortedkeys(t) -- the robust one
         end
         local n = 0
+        local m = #s
         local function kv(s)
-            n = n + 1
-            local k = s[n]
-            return k, t[k]
+            if n < m then
+                n = n + 1
+                local k = s[n]
+                return k, t[k]
+            end
         end
         return kv, s
     else
@@ -1003,7 +1006,9 @@ function table.print(t,...)
     end
 end
 
-setinspector(function(v) if type(v) == "table" then serialize(print,v,"table") return true end end)
+if setinspector then
+    setinspector(function(v) if type(v) == "table" then serialize(print,v,"table") return true end end)
+end
 
 -- -- -- obsolete but we keep them for a while and might comment them later -- -- --
 
@@ -1053,4 +1058,25 @@ end
 function table.sorted(t,...)
     sort(t,...)
     return t -- still sorts in-place
+end
+
+--
+
+function table.values(t,s) -- optional sort flag
+    if t then
+        local values, keys, v = { }, { }, 0
+        for key, value in next, t do
+            if not keys[value] then
+                v = v + 1
+                values[v] = value
+                keys[k] = key
+            end
+        end
+        if s then
+            sort(values)
+        end
+        return values
+    else
+        return { }
+    end
 end
