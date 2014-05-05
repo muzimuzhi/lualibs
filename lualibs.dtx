@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2009--2013 by PRAGMA ADE / ConTeXt Development Team
+% Copyright (C) 2009--2014 by PRAGMA ADE / ConTeXt Development Team
 %
 % See ConTeXt's mreadme.pdf for the license.
 %
@@ -34,7 +34,7 @@
 \input docstrip.tex
 \Msg{************************************************************************}
 \Msg{* Installation}
-\Msg{* Package: lualibs 2013/11/03 v2.1 Lua additional functions.}
+\Msg{* Package: lualibs 2014/05/05 v2.1 Lua additional functions.}
 \Msg{************************************************************************}
 
 \keepsilent
@@ -45,7 +45,7 @@
 \preamble
 This is a generated file.
 
-Copyright (C) 2009--2013 by PRAGMA ADE / ConTeXt Development Team
+Copyright (C) 2009--2014 by PRAGMA ADE / ConTeXt Development Team
 
 See ConTeXt's mreadme.pdf for the license.
 
@@ -101,7 +101,7 @@ and the derived file lualibs.lua.
 %<*driver>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesFile{lualibs.drv}
-  [2013/11/03 v2.1 Lua Libraries.]
+  [2014/05/05 v2.1 Lua Libraries.]
 \documentclass{ltxdoc}
 \usepackage{fancyvrb,xspace}
 \usepackage[x11names]{xcolor}
@@ -202,7 +202,7 @@ and the derived file lualibs.lua.
 % \GetFileInfo{lualibs.drv}
 %
 % \title{The \identifier{lualibs} package}
-% \date{2013/11/03 v2.1}
+% \date{2014/05/05 v2.1}
 % \author{Élie Roux      · \email{elie.roux@telecom-bretagne.eu}\\
 %         Philipp Gesang · \email{philipp.gesang@alumni.uni-heidelberg.de}}
 %
@@ -349,7 +349,6 @@ and the derived file lualibs.lua.
 %   lualibs-util-deb.lua      & util-deb.lua   & extra |debug| functionality      \\
 %   lualibs-util-tpl.lua      & util-tpl.lua   & templating                       \\
 %   lualibs-util-sta.lua      & util-sta.lua   & stacker (e.~g. for \abbrev{pdf}) \\
-%   lualibs-util-env.lua      & util-env.lua   & |argv| handling                  \\
 %   lualibs-util-jsn.lua      & util-jsn.lua   & conversion to and from json      \\[1ex]
 %  \end{tabular}
 %  \label{tab:extended}
@@ -418,8 +417,8 @@ lualibs = lualibs or { }
 
 lualibs.module_info = {
   name          = "lualibs",
-  version       = 2.10,
-  date          = "2013/11/03",
+  version       = 2.11,
+  date          = "2014/05/05",
   description   = "ConTeXt Lua standard libraries.",
   author        = "Hans Hagen, PRAGMA-ADE, Hasselt NL & Elie Roux & Philipp Gesang",
   copyright     = "PRAGMA ADE / ConTeXt Development Team",
@@ -573,8 +572,8 @@ local loadmodule        = lualibs.loadmodule
 
 local lualibs_basic_module = {
   name          = "lualibs-basic",
-  version       = 2.10,
-  date          = "2013/11/03",
+  version       = 2.11,
+  date          = "2014/05/05",
   description   = "ConTeXt Lua libraries -- basic collection.",
   author        = "Hans Hagen, PRAGMA-ADE, Hasselt NL & Elie Roux & Philipp Gesang",
   copyright     = "PRAGMA ADE / ConTeXt Development Team",
@@ -655,8 +654,8 @@ lualibs = lualibs or { }
 
 local lualibs_extended_module = {
   name          = "lualibs-extended",
-  version       = 2.10,
-  date          = "2013/11/03",
+  version       = 2.11,
+  date          = "2014/05/05",
   description   = "ConTeXt Lua libraries -- extended collection.",
   author        = "Hans Hagen, PRAGMA-ADE, Hasselt NL & Elie Roux & Philipp Gesang",
   copyright     = "PRAGMA ADE / ConTeXt Development Team",
@@ -733,17 +732,6 @@ local fake_trackers = function (name)
   }
 end
 
-%    \end{macrocode}
-% Among the libraries loaded is \verb|util-env.lua|, which adds
-% \CONTEXT’s own, superior command line argument handler.
-% Packages that rely on their own handling of arguments might not be
-% aware of this, or the library might have been loaded by another package
-% altogether.
-% For these cases we provide a copy of the original \verb|arg| list and
-% restore it after we are done loading.
-%
-%    \begin{macrocode}
-
 local backup_store = { }
 
 local fake_context = function ( )
@@ -751,8 +739,6 @@ local fake_context = function ( )
   if trackers then backup_store.trackers = trackers end
   logs     = fake_logs"logs"
   trackers = fake_trackers"trackers"
-
-  backup_store.argv = table.fastcopy(arg)
 end
 
 
@@ -763,10 +749,8 @@ end
 local unfake_context = function ( )
   if backup_store then
     local bl, bt = backup_store.logs, backup_store.trackers
-    local argv   = backup_store.argv
     if bl   then logs     = bl   end
     if bt   then trackers = bt   end
-    if argv then arg      = argv end
   end
 end
 
@@ -800,11 +784,6 @@ if loaded == false then
   loadmodule("lualibs-util-deb.lua")--- extra debugging
   loadmodule("lualibs-util-tpl.lua")--- templating
   loadmodule("lualibs-util-sta.lua")--- stacker (for writing pdf)
-  -------------------------------------!data-* -- Context specific
-  ----------("lualibs-util-lib.lua")---!swiglib; there is a luatex-swiglib
-  loadmodule("lualibs-util-env.lua")--- environment arguments
-  ----------("lualibs-mult-ini.lua")---
-  ----------("lualibs-core-con.lua")---
 end
 
 unfake_context() --- TODO check if this works at runtime
