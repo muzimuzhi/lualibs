@@ -6,7 +6,7 @@ if not modules then modules = { } end modules ['util-str'] = {
     license   = "see context related readme files"
 }
 
-utilities         = utilities or {}
+utilities         = utilities or { }
 utilities.strings = utilities.strings or { }
 local strings     = utilities.strings
 
@@ -44,7 +44,12 @@ end
 
 if not number then number = { } end -- temp hack for luatex-fonts
 
-local stripper = patterns.stripzeros
+local stripper    = patterns.stripzeros
+local newline     = patterns.newline
+local endofstring = patterns.endofstring
+local whitespace  = patterns.whitespace
+local spacer      = patterns.spacer
+local spaceortab  = patterns.spaceortab
 
 local function points(n)
     n = tonumber(n)
@@ -62,12 +67,12 @@ number.basepoints = basepoints
 -- str = " \n \ntest  \n test\ntest "
 -- print("["..string.gsub(string.collapsecrlf(str),"\n","+").."]")
 
-local rubish     = patterns.spaceortab^0 * patterns.newline
-local anyrubish  = patterns.spaceortab + patterns.newline
+local rubish     = spaceortab^0 * newline
+local anyrubish  = spaceortab + newline
 local anything   = patterns.anything
-local stripped   = (patterns.spaceortab^1 / "") * patterns.newline
+local stripped   = (spaceortab^1 / "") * newline
 local leading    = rubish^0 / ""
-local trailing   = (anyrubish^1 * patterns.endofstring) / ""
+local trailing   = (anyrubish^1 * endofstring) / ""
 local redundant  = rubish^3 / "\n"
 
 local pattern = Cs(leading * (trailing + redundant + stripped + anything)^0)
@@ -129,7 +134,7 @@ local pattern =
               return ""
           end
       end
-    + patterns.newline * Cp() / function(position)
+    + newline * Cp() / function(position)
           extra, start = 0, position
       end
     + patterns.anything
@@ -161,11 +166,6 @@ end
 --     str = gsub(str,"[\n\r]+ *","\n")
 --     return str
 -- end
-
-local newline     = patterns.newline
-local endofstring = patterns.endofstring
-local whitespace  = patterns.whitespace
-local spacer      = patterns.spacer
 
 local space       = spacer^0
 local nospace     = space/""
@@ -219,10 +219,12 @@ local striplinepatterns = {
     ["collapse"]            = patterns.collapser, -- how about: stripper fullstripper
 }
 
+setmetatable(striplinepatterns,{ __index = function(t,k) return p_prune_collapse end })
+
 strings.striplinepatterns = striplinepatterns
 
 function strings.striplines(str,how)
-    return str and lpegmatch(how and striplinepatterns[how] or p_prune_collapse,str) or str
+    return str and lpegmatch(striplinepatterns[how],str) or str
 end
 
 -- also see: string.collapsespaces
@@ -352,17 +354,26 @@ function string.autosingle(s,sep)
     return ("'" .. tostring(s) .. "'")
 end
 
-local tracedchars  = { }
+local tracedchars  = { [0] =
+    -- the regular bunch
+    "[null]", "[soh]", "[stx]", "[etx]", "[eot]", "[enq]", "[ack]", "[bel]",
+    "[bs]",   "[ht]",  "[lf]",  "[vt]",  "[ff]",  "[cr]",  "[so]",  "[si]",
+    "[dle]",  "[dc1]", "[dc2]", "[dc3]", "[dc4]", "[nak]", "[syn]", "[etb]",
+    "[can]",  "[em]",  "[sub]", "[esc]", "[fs]",  "[gs]",  "[rs]",  "[us]",
+    -- plus space
+    "[space]", -- 0x20
+}
+
 string.tracedchars = tracedchars
 strings.tracers    = tracedchars
 
 function string.tracedchar(b)
     -- todo: table
     if type(b) == "number" then
-        return tracedchars[b] or (utfchar(b) .. " (U+" .. format('%05X',b) .. ")")
+        return tracedchars[b] or (utfchar(b) .. " (U+" .. format("%05X",b) .. ")")
     else
         local c = utfbyte(b)
-        return tracedchars[c] or (b .. " (U+" .. format('%05X',c) .. ")")
+        return tracedchars[c] or (b .. " (U+" .. (c and format("%05X",c) or "?????") .. ")")
     end
 end
 
@@ -537,7 +548,7 @@ end
 -- We could probably use just %s with integers but who knows what Lua 5.3 will do? So let's
 -- for the moment use %i.
 
-local format_F = function() -- beware, no cast to number
+local format_F = function(f) -- beware, no cast to number
     n = n + 1
     if not f or f == "" then
         return format("(((a%s > -0.0000000005 and a%s < 0.0000000005) and '0') or format((a%s %% 1 == 0) and '%%i' or '%%.9f',a%s))",n,n,n,n)
@@ -842,7 +853,7 @@ local builder = Cs { "start",
               + V("m") + V("M") -- new
               + V("z") -- new
               --
-              + V("*") -- ignores probably messed up %
+           -- + V("?") -- ignores probably messed up %
             )
           + V("*")
         )
@@ -897,6 +908,7 @@ local builder = Cs { "start",
     ["A"] = (prefix_any * P("A")) / format_A, -- %A => "..." (forces tostring)
     --
     ["*"] = Cs(((1-P("%"))^1 + P("%%")/"%%")^1) / format_rest, -- rest (including %%)
+    ["?"] = Cs(((1-P("%"))^1               )^1) / format_rest, -- rest (including %%)
     --
     ["!"] = Carg(2) * prefix_any * P("!") * C((1-P("!"))^1) * P("!") / format_extension,
 }
@@ -1113,4 +1125,10 @@ local pattern =
 
 function string.optionalquoted(str)
     return lpegmatch(pattern,str) or str
+end
+
+local pattern = Cs((newline / (os.newline or "\r") + 1)^0)
+
+function string.replacenewlines(str)
+    return lpegmatch(pattern,str)
 end

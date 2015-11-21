@@ -129,22 +129,36 @@ local print, select, tostring = print, select, tostring
 
 local inspectors = { }
 
-function setinspector(inspector) -- global function
-    inspectors[#inspectors+1] = inspector
+function setinspector(kind,inspector) -- global function
+    inspectors[kind] = inspector
 end
 
 function inspect(...) -- global function
     for s=1,select("#",...) do
         local value = select(s,...)
-        local done = false
-        for i=1,#inspectors do
-            done = inspectors[i](value)
-            if done then
-                break
+        if value == nil then
+            print("nil")
+        else
+            local done  = false
+            -- type driven (table)
+            local kind      = type(value)
+            local inspector = inspectors[kind]
+            if inspector then
+                done = inspector(value)
+                if done then
+                    break
+                end
             end
-        end
-        if not done then
-            print(tostring(value))
+            -- whatever driven (token, node, ...)
+            for kind, inspector in next, inspectors do
+                done = inspector(value)
+                if done then
+                    break
+                end
+            end
+            if not done then
+                print(tostring(value))
+            end
         end
     end
 end
@@ -164,4 +178,15 @@ end
 
 if lua then
     lua.mask = load([[τεχ = 1]]) and "utf" or "ascii"
+end
+
+local flush   = io.flush
+
+if flush then
+
+    local execute = os.execute if execute then function os.execute(...) flush() return execute(...) end end
+    local exec    = os.exec    if exec    then function os.exec   (...) flush() return exec   (...) end end
+    local spawn   = os.spawn   if spawn   then function os.spawn  (...) flush() return spawn  (...) end end
+    local popen   = io.popen   if popen   then function io.popen  (...) flush() return popen  (...) end end
+
 end
