@@ -35,7 +35,7 @@ sourcefiles  = {
 
 
 -- set texmfhome for local installation in the git          
--- os.setenv("TEXMFHOME","C:\\Users\\Nililand-Surface\\Documents\\Git\\luaotfload\\texmf")                  
+              
 os.setenv("TEXMFHOME",lfs.currentdir().."/../luaotfload/texmf")                  
 
 

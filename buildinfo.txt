@@ -1,0 +1,57 @@
+-- REQUIREMENT: set CONTEXTPATH environment variable to .../texmf-context
+
+## Step 1
+check for new context versions:
+
+     texlua whatsnew.lua
+
+## Step 2
+
+copy and rename new files (must be done manually as far as I can see)
+
+## Step 3
+Adapt date and version in dtx, und the three main lua files.
+Adapt NEWS
+Adapt README
+
+
+## Step 4
+Unpack the dtx:
+
+    l3build unpack
+
+## Step 5 create the merged files in a context aware command line by running
+   in build/unpacked
+
+mtxrun --script package --merge lualibs-extended.lua
+mtxrun --script package --merge lualibs-basic.lua
+
+## Step 6
+
+copy the merged files to the main folder (or l3build will delete them in the next step)
+
+## Step 7
+
+install the new files in the texmf tree of luaotfload with
+
+     l3build install
+
+(luaotfload folder should be beside lualibs folder)
+
+Run
+     mktexlsr
+
+if needed
+
+## Step 8
+
+run tests (l3build check, luaotfload-tool -u)
+
+
+## Step 9
+
+Create CTAN-package
+
+     l3build ctan
+
+     
