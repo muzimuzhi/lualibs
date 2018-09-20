@@ -7,28 +7,36 @@ ctanpkg  = "lualibs"
 
 checkengines = {"luatex"}
 checkruns    = 3
+packtdszip   =true
+
+-- documentation
+
+typesetexe   = "lualatex"
+unpackfiles  =  {"*.dtx"}
+docfiles     = {"README","NEWS","LICENSE"}
 
 -- automatic tagging: perhaps later ...
 
+installfiles = {
+                "**/lualibs-*.lua",
+                "lualibs.lua",
+               }  
+
 -- ctan setup
 tdsroot = "luatex"
-
 textfiles    = {"README","NEWS","LICENSE"}
-docfiles     = {"README","NEWS","LICENSE"}
 
-installfiles = {
-                "*.lua"
-               }  
                
 sourcefiles  = {
                 "*.dtx",
-                "whatsnew.lua",
-                "Makefile",
-                "test-lualibs.lua"
+                "lualibs-*.lua",
+                "whatsnew.lua"
                }
 
-unpackfiles =  {"*.dtx"}
-                            
+
+
+-- set texmfhome for local installation in the git          
+os.setenv("TEXMFHOME",lfs.currentdir().."/texmf")                  
 
 
 kpse.set_program_name ("kpsewhich")

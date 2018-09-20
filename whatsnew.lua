@@ -17,7 +17,9 @@
 local prefixsep     = "-"
 local namespace     = "lualibs"
 local luasuffix     = ".lua"
-local basedir       = "/home/phg/context/tex/texmf-context/tex/context/base/mkiv"
+local contextpath   = os.env["CONTEXTPATH"] or ("/home/phg/context/tex/texmf-context") -- UF changed
+local basedir       = contextpath .. "/tex/context/base/mkiv"                          -- UF 20.09.2018
+print(basedir)
 local cmd_diff      = [[diff "%s" "%s"]]
 
 -----------------------------------------------------------------------
