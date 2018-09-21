@@ -1,5 +1,6 @@
 testing/*
-*-merged.lua
+# *-merged.lua
+lualibs.pdf
 *.aux
 *.sh
 build/*

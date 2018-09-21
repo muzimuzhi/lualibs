@@ -34,9 +34,11 @@ sourcefiles  = {
 
 
 
--- set texmfhome for local installation in the git          
-              
-os.setenv("TEXMFHOME",lfs.currentdir().."/../luaotfload/texmf")                  
+-- set texmfhome for local installation.
+-- the files go to the side-by-side folder of luaotfload
+-- to make it easier to run the tests there.          
+options["texmfhome"] = "../luaotfload/texmf"              
+
 
 
 kpse.set_program_name ("kpsewhich")
