@@ -5,7 +5,10 @@
                     Part of the Lualibs package.
                     https://github.com/u-fischer/lualibs
     made by adapting the existing whatsnew script.
-                    
+    
+    !!!!!!!!!!!!!!!
+     needs a CONTEXTPATH environment variable that points to tex\texmf-context 
+    !!!!!!!!!!!!!!!               
 
     Copyright 2013, 2018 Philipp Gesang, Ulrike Fischer
     License: GPL v2.0
