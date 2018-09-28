@@ -1,13 +1,19 @@
 -- REQUIREMENT: set CONTEXTPATH environment variable to .../texmf-context
 
 ## Step 1
-check for new context versions:
+check for new context versions, needs a diff program, so run from git bash
 
      texlua whatsnew.lua
 
 ## Step 2
 
 copy and rename new files (must be done manually as far as I can see)
+
+   new 28.09.2018: it can be done with
+   !!! needs a CONTEXTPATH environment variable that points to tex\texmf-context
+   should be run from git bash too. 
+
+    texlua import-from-context.lua
 
 ## Step 3
 Adapt date and version in dtx, und the three main lua files.
@@ -53,5 +59,3 @@ run tests (l3build check, luaotfload-tool -u)
 Create CTAN-package
 
      l3build ctan
-
-     
