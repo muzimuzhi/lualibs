@@ -11,8 +11,8 @@ for use independent of ConTeXt.
 This package has been developed by the LuaLaTeX development team on
 <http://github.com/lualatex/lualibs>. 
 
-The current verson 2.61 has been build by Ulrike Fischer on
-<https://github.com/u-fischer/lualibs>. 
+The current verson 2.64 has been build by Ulrike Fischer on
+<https://github.com/u-fischer/lualibs> from context 2018-12-01. 
 
 See the 'NEWS' file for version history.
 
