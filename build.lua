@@ -1,5 +1,5 @@
 -- Build script for lualibs
-packageversion="2.65"
+packageversion="2.6204"
 packagedate="2018/12/07"
 
 module   = "lualibs"
