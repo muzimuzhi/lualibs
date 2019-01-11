@@ -1,6 +1,6 @@
 -- merged file : lualibs-extended-merged.lua
 -- parent file : lualibs-extended.lua
--- merge date  : Tue Dec 25 16:21:26 2018
+-- merge date  : Fri Jan 11 01:33:40 2019
 
 do -- begin closure to overcome local limits and interference
 
@@ -3108,6 +3108,7 @@ function luautilities.loadedluacode(fullname,forcestrip,name,macros)
     code()
   else
     report_lua("loading of file %a failed:\n\t%s",fullname,message or "no message")
+    code,message=loadfile(fullname)
   end
   if forcestrip and luautilities.stripcode then
     if type(forcestrip)=="function" then
