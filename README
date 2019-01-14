@@ -11,7 +11,7 @@ for use independent of ConTeXt.
 This package has been developed by the LuaLaTeX development team on
 <http://github.com/lualatex/lualibs>. 
 
-The current verson 2.6205 has been build by Ulrike Fischer on
+The current verson 2.62 has been build by Ulrike Fischer on
 <https://github.com/u-fischer/lualibs> from context 2018-12-19. 
 
 See the 'NEWS' file for version history.
@@ -57,7 +57,7 @@ Source files:
     lualibs-string.lua              tex/luatex/lualibs/lualibs-string.lua
     lualibs-table.lua               tex/luatex/lualibs/lualibs-table.lua
     lualibs-trac-inf.lua            tex/luatex/lualibs/lualibs-trac-inf.lua
-    lualibs-unicode.lua             tex/luatex/lualibs/lualibs-unicode.lua
+    lualibs-unicode.lua*            tex/luatex/lualibs/lualibs-unicode.lua
     lualibs-url.lua                 tex/luatex/lualibs/lualibs-url.lua
     lualibs-util-deb.lua            tex/luatex/lualibs/lualibs-util-deb.lua
     lualibs-util-dim.lua            tex/luatex/lualibs/lualibs-util-dim.lua
@@ -72,6 +72,8 @@ Source files:
     LICENSE                         doc/luatex/lualibs/LICENSE
     NEWS                            doc/luatex/lualibs/NEWS
     README                          doc/luatex/lualibs/README
+    
+* the file has been modified to enable the unicode library again    
 
 Derived files:
     lualibs.lua                     tex/luatex/lualibs/lualibs.lua

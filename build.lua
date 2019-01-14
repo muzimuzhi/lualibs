@@ -1,6 +1,6 @@
 -- Build script for lualibs
-packageversion="2.6204"
-packagedate="2018/12/07"
+packageversion="2.62"
+packagedate="2018/12/19"
 
 module   = "lualibs"
 ctanpkg  = "lualibs"
