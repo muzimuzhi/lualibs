@@ -1,13 +1,13 @@
 -- Build script for lualibs
 packageversion="2.62"
-packagedate="2018/12/19"
+packagedate="2018-12-19"
 
 module   = "lualibs"
 ctanpkg  = "lualibs"
 
 uploadconfig = {
   pkg     = ctanpkg,
-  version = "v"..packageversion.." "..string.gsub (packagedate,"-", "/"),
+  version = "v"..packageversion.." "..packagedate,
   author  = "Philipp Gesang; Élie Roux",
   license = "GNU General Public License, version 2",
   summary = "Additional Lua functions for LuaTeX macro programmers",
@@ -21,7 +21,7 @@ uploadconfig = {
   topic=    {"luatex","lua-supp"},
   note     = [[Uploaded automatically by l3build...]],
   description=[[<p>Lualibs is a collection of Lua modules useful for general programming.</p><p>The bundle is based on lua modules shipped with ConTeXt, and made available in this bundle for use independent of ConTeXt.</p>]],
-  announcement="This version syncs the files with the ConTeXt files from"..string.gsub (packagedate,"-", "/").."."              
+  announcement="This version syncs the files with the ConTeXt files from "..packagedate.."."              
 }
 
 checkengines = {"luatex"}
