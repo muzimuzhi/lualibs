@@ -1,6 +1,14 @@
 -- Build script for lualibs
-packageversion="2.7001"
-packagedate="2019-01-07"
+packageversion="2.62"
+packagedate="2018-12-19"
+
+
+local ok, mydata = pcall(require, "ulrikefischerdata.lua")
+if not ok then
+  mydata= {email="XXX",github="XXX",name="XXX"}
+end
+
+print(mydata.email)
 
 module   = "lualibs"
 ctanpkg  = "lualibs"
@@ -12,11 +20,11 @@ uploadconfig = {
   license = "GNU General Public License, version 2",
   summary = "Additional Lua functions for LuaTeX macro programmers",
   ctanPath = "/macros/luatex/generic/lualibs",
-  repository = "https://github.com/u-fischer/lualibs",
-  bugtracker = "https://github.com/u-fischer/lualibs/issues",
-  support    = "https://github.com/u-fischer/lualibs/issues",
-  uploader = "Ulrike Fischer",
-  -- email should get asked ... 
+  repository = mydata.github .. "lualibs",
+  bugtracker = mydata.github .. "lualibs/issues",
+  support    = mydata.github .. "lualibs/issues",
+  uploader   = mydata.name,
+  email      = mydata.email, 
   update   = true ,
   topic=    {"luatex","lua-supp"},
   note     = [[Uploaded automatically by l3build...]],
