@@ -1,9 +1,28 @@
 -- Build script for lualibs
-packageversion="2.6204"
-packagedate="2018/12/07"
+packageversion="2.7001"
+packagedate="2019-01-07"
 
 module   = "lualibs"
 ctanpkg  = "lualibs"
+
+uploadconfig = {
+  pkg     = ctanpkg,
+  version = "v"..packageversion.." "..packagedate,
+  author  = "Philipp Gesang; Élie Roux",
+  license = "GNU General Public License, version 2",
+  summary = "Additional Lua functions for LuaTeX macro programmers",
+  ctanPath = "/macros/luatex/generic/lualibs",
+  repository = "https://github.com/u-fischer/lualibs",
+  bugtracker = "https://github.com/u-fischer/lualibs/issues",
+  support    = "https://github.com/u-fischer/lualibs/issues",
+  uploader = "Ulrike Fischer",
+  -- email should get asked ... 
+  update   = true ,
+  topic=    {"luatex","lua-supp"},
+  note     = [[Uploaded automatically by l3build...]],
+  description=[[<p>Lualibs is a collection of Lua modules useful for general programming.</p><p>The bundle is based on lua modules shipped with ConTeXt, and made available in this bundle for use independent of ConTeXt.</p>]],
+  announcement="This version syncs the files with the ConTeXt files from "..packagedate.."."              
+}
 
 checkengines = {"luatex"}
 checkruns    = 3
