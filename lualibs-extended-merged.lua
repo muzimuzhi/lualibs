@@ -1,6 +1,6 @@
 -- merged file : lualibs-extended-merged.lua
 -- parent file : lualibs-extended.lua
--- merge date  : Fri Jan 11 01:33:40 2019
+-- merge date  : Sat Jan 19 19:09:16 2019
 
 do -- begin closure to overcome local limits and interference
 
@@ -1791,6 +1791,42 @@ if setinspector then
     end
   end)
 end
+local mt={
+  __newindex=function(t,k,v)
+    local n=t.last+1
+    t.last=n
+    t.list[n]=k
+    t.hash[k]=v
+  end,
+  __index=function(t,k)
+    return t.hash[k]
+  end,
+  __len=function(t)
+    return t.last
+  end,
+}
+function table.orderedhash()
+  return setmetatable({ list={},hash={},last=0 },mt)
+end
+function table.ordered(t)
+  local n=t.last
+  if n>0 then
+    local l=t.list
+    local i=1
+    local h=t.hash
+    local f=function()
+      if i<=n then
+        local k=i
+        local v=h[l[k]]
+        i=i+1
+        return k,v
+      end
+    end
+    return f,1,h[l[1]]
+  else
+    return function() end
+  end
+end
 
 end -- closure
 
@@ -3009,14 +3045,21 @@ function statistics.formatruntime(runtime)
 end
 function statistics.runtime()
   stoptiming(statistics)
-  return statistics.formatruntime(elapsedtime(statistics))
+  local runtime=lua.getruntime and lua.getruntime() or elapsedtime(statistics)
+  return statistics.formatruntime(runtime)
 end
 local report=logs.reporter("system")
-function statistics.timed(action)
+function statistics.timed(action,all)
   starttiming("run")
   action()
   stoptiming("run")
-  report("total runtime: %s seconds",elapsedtime("run"))
+  local runtime=tonumber(elapsedtime("run"))
+  if all then
+    local alltime=lua.getruntime and lua.getruntime() or elapsedtime(statistics)
+    report("total runtime: %0.3f seconds of %0.3f seconds",runtime,alltime)
+  else
+    report("total runtime: %0.3f seconds",runtime)
+  end
 end
 function statistics.tracefunction(base,tag,...)
   for i=1,select("#",...) do
