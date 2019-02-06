@@ -17,7 +17,7 @@ uploadconfig = {
   pkg     = ctanpkg,
   version = "v"..packageversion.." "..packagedate,
   author  = "Philipp Gesang; Élie Roux",
-  license = "GNU General Public License, version 2",
+  license = "gpl2",
   summary = "Additional Lua functions for LuaTeX macro programmers",
   ctanPath = "/macros/luatex/generic/lualibs",
   repository = mydata.github .. "lualibs",
@@ -27,8 +27,8 @@ uploadconfig = {
   email      = mydata.email, 
   update   = true ,
   topic=    {"luatex","lua-supp"},
-  note     = [[Uploaded automatically by l3build...]],
-  description=[[Lualibs is a collection of Lua modules useful for general programming.
+  note     = [[Uploaded automatically by l3build... Description and authors unchanged]],
+  description=[[Lualibs is a collection of Lua modules useful for general programming. 
   The bundle is based on lua modules shipped with ConTeXt, and made available in this bundle for use independent of ConTeXt.]],
   announcement="This version syncs the files with the ConTeXt files from "..packagedate.."."              
 }
