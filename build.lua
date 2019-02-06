@@ -28,7 +28,8 @@ uploadconfig = {
   update   = true ,
   topic=    {"luatex","lua-supp"},
   note     = [[Uploaded automatically by l3build...]],
-  description=[[<p>Lualibs is a collection of Lua modules useful for general programming.</p><p>The bundle is based on lua modules shipped with ConTeXt, and made available in this bundle for use independent of ConTeXt.</p>]],
+  description=[[Lualibs is a collection of Lua modules useful for general programming.
+  The bundle is based on lua modules shipped with ConTeXt, and made available in this bundle for use independent of ConTeXt.]],
   announcement="This version syncs the files with the ConTeXt files from "..packagedate.."."              
 }
 
