@@ -4,3 +4,4 @@ lualibs.pdf
 *.aux
 *.sh
 build/*
+lualibs-ctan.curlopt
