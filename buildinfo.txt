@@ -16,7 +16,7 @@ copy and rename new files (must be done manually as far as I can see)
     texlua import-from-context.lua
 
 ## Step 3
-Adapt date and version in dtx, und the three main lua files.
+Adapt date (YYYY-MM-DD and YYYY/MM/DD) and version in dtx, und the three main lua files.
 Adapt NEWS
 Adapt README
 Enable unicode in lualibs-unicode (until we remove the dependency ...)
