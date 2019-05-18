@@ -1,6 +1,6 @@
 -- Build script for lualibs
-packageversion="2.6501"
-packagedate="2019-03-21"
+packageversion="2.6503"
+packagedate="2019-05-18"
 
 
 local ok, mydata = pcall(require, "ulrikefischerdata.lua")
