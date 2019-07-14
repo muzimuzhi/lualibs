@@ -505,12 +505,12 @@ do
   lualibs.error, lualibs.warn, lualibs.info = error, warn, info
 end
 
-if luatexbase and luatexbase.find_file then
-  find_file = luatexbase.find_file
-else
-  kpse.set_program_name"luatex"
-  find_file = kpsefind_file
+local info = status.list()
+if info.kpse_used == 0 then
+ kpse.set_program_name("luatex")
 end
+
+find_file = kpsefind_file
 
 %    \end{macrocode}
 %     The lualibs load a merged package by default.
