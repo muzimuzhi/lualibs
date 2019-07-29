@@ -52,7 +52,7 @@ packtdszip   =true
 -- set there for users
           
 options["texmfhome"] = "../luaotfload/texmf"           
-
+ctanreadme= "CTANREADME.md"
 -------------------
 -- documentation
 -------------------
