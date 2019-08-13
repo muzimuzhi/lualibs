@@ -1,6 +1,6 @@
 # The Lualibs Package
 
-VERSION: 2.6704
+VERSION: 2.67
 
 DATE: 2019-08-11
 
