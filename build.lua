@@ -51,7 +51,7 @@ packtdszip   =true
 -- to make it easier to run the tests there and to have a complete
 -- set there for users
           
-options["texmfhome"] = "../luaotfload/texmf"           
+options["texmfhome"] = "../luaotfload/supporttexmf"           
 ctanreadme= "CTANREADME.md"
 -------------------
 -- documentation
