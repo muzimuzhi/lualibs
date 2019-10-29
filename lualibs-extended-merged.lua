@@ -1,6 +1,6 @@
 -- merged file : lualibs-extended-merged.lua
 -- parent file : lualibs-extended.lua
--- merge date  : Tue Aug 13 20:12:59 2019
+-- merge date  : Tue Oct 29 16:47:22 2019
 
 do -- begin closure to overcome local limits and interference
 
@@ -366,7 +366,7 @@ local environment={
  stripzero=patterns.stripzero,
  stripzeros=patterns.stripzeros,
  escapedquotes=string.escapedquotes,
- FORMAT=string.f9,
+ FORMAT=string.f6,
 }
 local arguments={ "a1" } 
 setmetatable(arguments,{ __index=function(t,k)
@@ -574,12 +574,25 @@ local format_n=function()
  n=n+1
  return format("((a%s %% 1 == 0) and format('%%i',a%s) or tostring(a%s))",n,n,n)
 end
-local format_N=function(f) 
- n=n+1
- if not f or f=="" then
-  f=".9"
- end 
- return format("(((a%s %% 1 == 0) and format('%%i',a%s)) or lpegmatch(stripzero,format('%%%sf',a%s)))",n,n,f,n)
+local format_N  if environment.FORMAT then
+ format_N=function(f)
+  n=n+1
+  if not f or f=="" then
+   return format("FORMAT(a%s,'%%.9f')",n)
+  elseif f==".6" then
+   return format("FORMAT(a%s)",n)
+  else
+   return format("FORMAT(a%s,'%%%sf')",n,f)
+  end
+ end
+else
+ format_N=function(f) 
+  n=n+1
+  if not f or f=="" then
+   f=".9"
+  end 
+  return format("(((a%s %% 1 == 0) and format('%%i',a%s)) or lpegmatch(stripzero,format('%%%sf',a%s)))",n,n,f,n)
+ end
 end
 local format_a=function(f)
  n=n+1
@@ -1416,7 +1429,21 @@ function table.fastserialize(t,prefix)
   m=m+1
   r[m]="{"
   if n>0 then
-   for i=0,n do
+   local v=t[0]
+   if v then
+    local tv=type(v)
+    if tv=="string" then
+     m=m+1 r[m]=f_indexed_string(0,v)
+    elseif tv=="number" then
+     m=m+1 r[m]=f_indexed_number(0,v)
+    elseif tv=="table" then
+     m=m+1 r[m]=f_indexed_table(0)
+     fastserialize(v)
+    elseif tv=="boolean" then
+     m=m+1 r[m]=f_indexed_boolean(0,v)
+    end
+   end
+   for i=1,n do
     local v=t[i]
     local tv=type(v)
     if tv=="string" then
@@ -3377,6 +3404,11 @@ luautilities.nofstrippedchunks=0
 luautilities.nofstrippedbytes=0
 local strippedchunks={} 
 luautilities.strippedchunks=strippedchunks
+if not LUATEXENGINE then
+ LUATEXENGINE=status.luatex_engine and string.lower(status.luatex_engine)
+ JITSUPPORTED=LUATEXENGINE=="luajittex" or jit
+ CONTEXTLMTXMODE=CONTEXTLMTXMODE or (LUATEXENGINE=="luametatex" and 1) or 0
+end
 luautilities.suffixes={
  tma="tma",
  tmc=(CONTEXTLMTXMODE and CONTEXTLMTXMODE>0 and "tmd") or (jit and "tmb") or "tmc",
@@ -3386,7 +3418,7 @@ luautilities.suffixes={
  luv="luv",
  luj="luj",
  tua="tua",
- tuc="tuc",
+ tuc=(CONTEXTLMTXMODE and CONTEXTLMTXMODE>0 and "tud") or (jit and "tub") or "tuc",
 }
 local function register(name) 
  if tracestripping then
@@ -3833,6 +3865,7 @@ local report_template=logs.reporter("template")
 local tostring,next=tostring,next
 local format,sub,byte=string.format,string.sub,string.byte
 local P,C,R,Cs,Cc,Carg,lpegmatch,lpegpatterns=lpeg.P,lpeg.C,lpeg.R,lpeg.Cs,lpeg.Cc,lpeg.Carg,lpeg.match,lpeg.patterns
+local formatters=string.formatters
 local replacer
 local function replacekey(k,t,how,recursive)
  local v=t[k]
@@ -3901,6 +3934,10 @@ local function replaceoptional(l,m,r,t,how,recurse)
  local v=t[l]
  return v and v~="" and lpegmatch(replacer,r,1,t,how or "lua",recurse or false) or ""
 end
+local function replaceformatted(l,m,r,t,how,recurse)
+ local v=t[r]
+ return v and formatters[l](v)
+end
 local single=P("%")  
 local double=P("%%") 
 local lquoted=P("%[") 
@@ -3914,16 +3951,19 @@ local nolquoted=lquoted/''
 local norquoted=rquoted/''
 local nolquotedq=lquotedq/''
 local norquotedq=rquotedq/''
+local nolformatted=P(":")/"%%"
+local norformatted=P(":")/""
 local noloptional=P("%?")/''
 local noroptional=P("?%")/''
 local nomoptional=P(":")/''
 local args=Carg(1)*Carg(2)*Carg(3)
-local key=nosingle*((C((1-nosingle   )^1)*args)/replacekey  )*nosingle
-local quoted=nolquotedq*((C((1-norquotedq )^1)*args)/replacekeyquoted  )*norquotedq
-local unquoted=nolquoted*((C((1-norquoted  )^1)*args)/replacekeyunquoted)*norquoted
+local key=nosingle*((C((1-nosingle)^1)*args)/replacekey)*nosingle
+local quoted=nolquotedq*((C((1-norquotedq)^1)*args)/replacekeyquoted)*norquotedq
+local unquoted=nolquoted*((C((1-norquoted)^1)*args)/replacekeyunquoted)*norquoted
 local optional=noloptional*((C((1-nomoptional)^1)*nomoptional*C((1-noroptional)^1)*args)/replaceoptional)*noroptional
+local formatted=nosingle*((Cs(nolformatted*(1-norformatted )^1)*norformatted*C((1-nosingle)^1)*args)/replaceformatted)*nosingle
 local any=P(1)
-   replacer=Cs((unquoted+quoted+escape+optional+key+any)^0)
+   replacer=Cs((unquoted+quoted+formatted+escape+optional+key+any)^0)
 local function replace(str,mapping,how,recurse)
  if mapping and str then
   return lpegmatch(replacer,str,1,mapping,how or "lua",recurse or false) or str

@@ -1,6 +1,6 @@
 -- merged file : lualibs-basic-merged.lua
 -- parent file : lualibs-basic.lua
--- merge date  : Tue Aug 13 20:13:08 2019
+-- merge date  : Tue Oct 29 16:47:31 2019
 
 do -- begin closure to overcome local limits and interference
 
@@ -19,6 +19,9 @@ LUAVERSION=LUAMAJORVERSION+LUAMINORVERSION/10
 if LUAVERSION<5.2 and jit then
  MINORVERSION=2
  LUAVERSION=5.2
+end
+if lua and lua.openfile then
+ io.open=lua.openfile
 end
 if not lpeg then
  lpeg=require("lpeg")
@@ -613,7 +616,7 @@ patterns.propername=(uppercase+lowercase+underscore)*(uppercase+lowercase+unders
 patterns.somecontent=(anything-newline-space)^1 
 patterns.beginline=#(1-newline)
 patterns.longtostring=Cs(whitespace^0/""*((patterns.quoted+nonwhitespace^1+whitespace^1/""*(endofstring+Cc(" ")))^0))
-function anywhere(pattern) 
+local function anywhere(pattern) 
  return (1-P(pattern))^0*P(pattern)
 end
 lpeg.anywhere=anywhere
@@ -3954,43 +3957,98 @@ if not modules then modules={} end modules ['l-gzip']={
  copyright="PRAGMA ADE / ConTeXt Development Team",
  license="see context related readme files"
 }
-if not gzip then
- return
-end
-local suffix,suffixes=file.suffix,file.suffixes
-function gzip.load(filename)
- local f=io.open(filename,"rb")
- if not f then
- elseif suffix(filename)=="gz" then
-  f:close()
-  local g=gzip.open(filename,"rb")
-  if g then
-   local str=g:read("*all")
-   g:close()
+if gzip then
+ local suffix,suffixes=file.suffix,file.suffixes
+ function gzip.load(filename)
+  local f=io.open(filename,"rb")
+  if not f then
+  elseif suffix(filename)=="gz" then
+   f:close()
+   local g=gzip.open(filename,"rb")
+   if g then
+    local str=g:read("*all")
+    g:close()
+    return str
+   end
+  else
+   local str=f:read("*all")
+   f:close()
    return str
   end
- else
-  local str=f:read("*all")
-  f:close()
-  return str
  end
+ function gzip.save(filename,data)
+  if suffix(filename)~="gz" then
+   filename=filename..".gz"
+  end
+  local f=io.open(filename,"wb")
+  if f then
+   local s=zlib.compress(data or "",9,nil,15+16)
+   f:write(s)
+   f:close()
+   return #s
+  end
+ end
+ function gzip.suffix(filename)
+  local suffix,extra=suffixes(filename)
+  local gzipped=extra=="gz"
+  return suffix,gzipped
+ end
+else
 end
-function gzip.save(filename,data)
- if suffix(filename)~="gz" then
-  filename=filename..".gz"
+if flate then
+ local type=type
+ local find=string.find
+ local compress=flate.gz_compress
+ local decompress=flate.gz_decompress
+ local absmax=128*1024*1024
+ local initial=64*1024
+ local identifier="^\x1F\x8B\x08"
+ function gzip.compressed(s)
+  return s and find(s,identifier)
  end
- local f=io.open(filename,"wb")
- if f then
-  local s=zlib.compress(data or "",9,nil,15+16)
-  f:write(s)
-  f:close()
-  return #s
+ function gzip.compress(s,level)
+  if s and not find(s,identifier) then 
+   if not level then
+    level=3
+   elseif level<=0 then
+    return s
+   elseif level>9 then
+    level=9
+   end
+   return compress(s,level) or s
+  end
  end
-end
-function gzip.suffix(filename)
- local suffix,extra=suffixes(filename)
- local gzipped=extra=="gz"
- return suffix,gzipped
+ function gzip.decompress(s,size,iterate)
+  if s and find(s,identifier) then
+   if type(size)~="number" then
+    size=initial
+   end
+   if size>absmax then
+    size=absmax
+   end
+   if type(iterate)=="number" then
+    max=size*iterate
+   elseif iterate==nil or iterate==true then
+    iterate=true
+    max=absmax
+   end
+   if max>absmax then
+    max=absmax
+   end
+   while true do
+    local d=decompress(s,size)
+    if d then
+     return d
+    end
+    size=2*size
+    if not iterate or size>max then
+     return false
+    end
+   end
+  else
+   return s
+  end
+ end
 end
 
 end -- closure
@@ -5097,49 +5155,52 @@ end
 function utf.utf32_to_utf8_t(t,endian)
  return endian and utf32_to_utf8_be_t(t) or utf32_to_utf8_le_t(t) or t
 end
-local function little(b)
- if b<0x10000 then
-  return char(b%256,rshift(b,8))
- else
-  b=b-0x10000
-  local b1=rshift(b,10)+0xD800
-  local b2=b%1024+0xDC00
-  return char(b1%256,rshift(b1,8),b2%256,rshift(b2,8))
+if bit32 then
+ local rshift=bit32.rshift
+ local function little(b)
+  if b<0x10000 then
+   return char(b%256,rshift(b,8))
+  else
+   b=b-0x10000
+   local b1=rshift(b,10)+0xD800
+   local b2=b%1024+0xDC00
+   return char(b1%256,rshift(b1,8),b2%256,rshift(b2,8))
+  end
  end
-end
-local function big(b)
- if b<0x10000 then
-  return char(rshift(b,8),b%256)
- else
-  b=b-0x10000
-  local b1=rshift(b,10)+0xD800
-  local b2=b%1024+0xDC00
-  return char(rshift(b1,8),b1%256,rshift(b2,8),b2%256)
+ local function big(b)
+  if b<0x10000 then
+   return char(rshift(b,8),b%256)
+  else
+   b=b-0x10000
+   local b1=rshift(b,10)+0xD800
+   local b2=b%1024+0xDC00
+   return char(rshift(b1,8),b1%256,rshift(b2,8),b2%256)
+  end
  end
-end
-local l_remap=Cs((p_utf8byte/little+P(1)/"")^0)
-local b_remap=Cs((p_utf8byte/big+P(1)/"")^0)
-local function utf8_to_utf16_be(str,nobom)
- if nobom then
-  return lpegmatch(b_remap,str)
- else
-  return char(254,255)..lpegmatch(b_remap,str)
+ local l_remap=Cs((p_utf8byte/little+P(1)/"")^0)
+ local b_remap=Cs((p_utf8byte/big+P(1)/"")^0)
+ local function utf8_to_utf16_be(str,nobom)
+  if nobom then
+   return lpegmatch(b_remap,str)
+  else
+   return char(254,255)..lpegmatch(b_remap,str)
+  end
  end
-end
-local function utf8_to_utf16_le(str,nobom)
- if nobom then
-  return lpegmatch(l_remap,str)
- else
-  return char(255,254)..lpegmatch(l_remap,str)
+ local function utf8_to_utf16_le(str,nobom)
+  if nobom then
+   return lpegmatch(l_remap,str)
+  else
+   return char(255,254)..lpegmatch(l_remap,str)
+  end
  end
-end
-utf.utf8_to_utf16_be=utf8_to_utf16_be
-utf.utf8_to_utf16_le=utf8_to_utf16_le
-function utf.utf8_to_utf16(str,littleendian,nobom)
- if littleendian then
-  return utf8_to_utf16_le(str,nobom)
- else
-  return utf8_to_utf16_be(str,nobom)
+ utf.utf8_to_utf16_be=utf8_to_utf16_be
+ utf.utf8_to_utf16_le=utf8_to_utf16_le
+ function utf.utf8_to_utf16(str,littleendian,nobom)
+  if littleendian then
+   return utf8_to_utf16_le(str,nobom)
+  else
+   return utf8_to_utf16_be(str,nobom)
+  end
  end
 end
 local pattern=Cs (
