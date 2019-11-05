@@ -2,7 +2,7 @@
 
 VERSION: 2.68
 
-DATE: 2019-10-29
+DATE: 2019-11-05
 
 Lualibs is a collection of Lua modules useful for general programming.
 
