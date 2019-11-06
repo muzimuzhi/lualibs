@@ -1,8 +1,10 @@
 # The Lualibs Package
 
-VERSION: 2.68
+VERSION: 2.69
 
-DATE: 2019-11-05
+DATE: 2019-11-06
+
+FONTLOADERDATE: 2019-10-29
 
 Lualibs is a collection of Lua modules useful for general programming.
 
@@ -12,8 +14,8 @@ for use independent of ConTeXt.
 This package has been developed by the LuaLaTeX development team on
 <https://github.com/lualatex/lualibs>. 
 
-The current version has been build by Ulrike Fischer on
-<https://github.com/u-fischer/lualibs>. The date equals the date of the context files. 
+The current version has been build by the LaTeX3 Project Team on
+<https://github.com/latex3/lualibs/>. The fontloader date equals the date of the context files. 
 
 See the 'NEWS' file for version history.
 

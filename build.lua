@@ -1,6 +1,6 @@
 -- Build script for lualibs
-packageversion= "2.68"
-packagedate= "2019-11-05"
+packageversion= "2.69"
+packagedate= "2019-11-06"
 fontloaderdate= "2019-10-29" -- only as record.
 
 module   = "lualibs"
@@ -21,9 +21,9 @@ uploadconfig = {
   license    = "gpl2",
   summary    = "Additional Lua functions for LuaTeX macro programmers",
   ctanPath   = "/macros/luatex/generic/lualibs",
-  repository = mydata.github .. "lualibs",
-  bugtracker = mydata.github .. "lualibs/issues",
-  support    = mydata.github .. "lualibs/issues",
+  repository = "https://github.com/latex3/lualibs",
+  bugtracker = "https://github.com/latex3/lualibs/issues",
+  support    = "https://github.com/latex3/lualibs/issues",
   uploader   = mydata.name,
   email      = mydata.email, 
   update     = true ,
@@ -31,7 +31,7 @@ uploadconfig = {
   note       = [[Uploaded automatically by l3build... Description and authors unchanged]],
   description=[[Lualibs is a collection of Lua modules useful for general programming. 
   The bundle is based on lua modules shipped with ConTeXt, and made available in this bundle for use independent of ConTeXt.]],
-  announcement="This version syncs the files with the ConTeXt files from "..fontloaderdate.."."              
+  announcement="This version syncs the files with the ConTeXt files from "..fontloaderdate.." and corrects some documentation issues." 
 }
 
 -- check (currently no tests)
@@ -121,6 +121,10 @@ function update_tag (file,content,tagname,tagdate)
    content = string.gsub (content,  
                          "%d%d%d%d%-%d%d%-%d%d",
                          packagedate )
+   content = string.gsub (content,  
+                         "context %d%d%d%d%-%d%d%-%d%d",
+                         "context ".. fontloaderdate )
+                         
    local imgpackagedate = string.gsub (packagedate,"%-","--")                          
    content = string.gsub (content,  
                          "%d%d%d%d%-%-%d%d%-%-%d%d",
@@ -132,7 +136,10 @@ function update_tag (file,content,tagname,tagdate)
                          "VERSION: " .. packageversion )
    content = string.gsub (content,  
                          "DATE: %d%d%d%d%-%d%d%-%d%d",
-                         "DATE: " .. packagedate )                                                                          
+                         "DATE: " .. packagedate )  
+   content = string.gsub (content,  
+                         "FONTLOADERDATE: %d%d%d%d%-%d%d%-%d%d",
+                         "FONTLOADERDATE: " .. fontloaderdate )                                                                                                     
    return content                               
  end
  return content
