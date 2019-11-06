@@ -60,6 +60,8 @@ tlmgr install  luacode environ adjustbox collectbox ms varwidth geometry url ule
 tlmgr install  standalone pgf-blur inconsolata tools caption hyperref metalogo fancyvrb 
 tlmgr install  mdwtools titlesec tocloft pdfpages listings
 
+# makeindex
+tlmgr install makeindex
  
 # Assuming a 'basic' font set up, metafont is required to avoid
 # warnings with some packages and errors with others
