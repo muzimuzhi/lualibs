@@ -1,10 +1,10 @@
 # The Lualibs Package
 
-VERSION: 2.69
+VERSION: 2.70
 
-DATE: 2019-11-06
+DATE: 2020-02-02
 
-FONTLOADERDATE: 2019-10-29
+FONTLOADERDATE: 2020-01-26
 
 Lualibs is a collection of Lua modules useful for general programming.
 

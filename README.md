@@ -1,7 +1,7 @@
 # The Lualibs Package
 
-![Version: 2.69](https://img.shields.io/badge/current_version-2.69-blue.svg?style=flat-square)
-![Date: 2019-11-06](https://img.shields.io/badge/date-2019--11--06-blue.svg?style=flat-square)
+![Version: 2.70](https://img.shields.io/badge/current_version-2.70-blue.svg?style=flat-square)
+![Date: 2020-02-02](https://img.shields.io/badge/date-2020--02--02-blue.svg?style=flat-square)
 [![License: GNU GPLv2](https://img.shields.io/badge/license-GNU_GPLv2-blue.svg?style=flat-square)](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 
 
@@ -15,7 +15,7 @@ This package has been developed by the LuaLaTeX development team on
 <http://github.com/lualatex/lualibs>. 
 
 The current version has been build by the LaTeX3 Project Team on
-<https://github.com/latex3/lualibs/> from context 2019-10-29. 
+<https://github.com/latex3/lualibs/> from context 2020-01-26. 
 
 Please see the documentation lualibs.pdf for more information.
 
