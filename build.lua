@@ -31,7 +31,7 @@ uploadconfig = {
   note       = [[Uploaded automatically by l3build... Description and authors unchanged]],
   description=[[Lualibs is a collection of Lua modules useful for general programming. 
   The bundle is based on lua modules shipped with ConTeXt, and made available in this bundle for use independent of ConTeXt.]],
-  announcement="This version syncs the files with the ConTeXt files from "..fontloaderdate.." and corrects some documentation issues." 
+  announcement="This version syncs the files with the ConTeXt files from "..fontloaderdate.."." 
 }
 
 -- check (currently no tests)
