@@ -4698,7 +4698,7 @@ if not modules then modules={} end modules ['l-unicode']={
  license="see context related readme files"
 }
 utf=utf or {}
-unicode=nil
+-- unicode=nil
 if not string.utfcharacters then
  local gmatch=string.gmatch
  function string.characters(str)
