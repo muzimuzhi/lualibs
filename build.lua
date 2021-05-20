@@ -1,7 +1,7 @@
 -- Build script for lualibs
-packageversion= "2.73"
-packagedate= "2020-12-30"
-fontloaderdate= "2020-12-30" -- only as record.
+packageversion= "2.74"
+packagedate= "2021-05-20"
+fontloaderdate= "2021-05-20" -- only as record.
 
 module   = "lualibs"
 ctanpkg  = "lualibs"
