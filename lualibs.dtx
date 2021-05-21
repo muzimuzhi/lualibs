@@ -115,8 +115,7 @@ and lualibs-extended.lua.
 \def\primarycolor{DodgerBlue4}  %%-> rgb  16  78 139 | #104e8b
 \def\secondarycolor{Goldenrod4} %%-> rgb 139 105 200 | #8b6914
 %
-\usepackage[
-    bookmarks=true,
+\hypersetup{
    colorlinks=true,
     linkcolor=\primarycolor,
      urlcolor=\secondarycolor,
@@ -124,8 +123,8 @@ and lualibs-extended.lua.
      pdftitle={The lualibs package},
    pdfsubject={Port of the ConTeXt Lua libraries},
     pdfauthor={Elie Roux & Philipp Gesang},
-  pdfkeywords={luatex, lualatex, unicode, opentype}
-]{hyperref}
+  pdfkeywords={luatex, lualatex, unicode, opentype}}
+
 \newcommand*\email[1]{\href{mailto:#1}{#1}}
 \usepackage{fontspec}
 \setmainfont[
