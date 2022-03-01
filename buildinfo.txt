@@ -20,6 +20,7 @@ copy and rename new files (must be done manually as far as I can see)
 - run l3build.lua tag
 - Add version info to NEWS
 - Enable unicode in lualibs-unicode (until we remove the dependency ...)
+- Disable outer return statements in lualibs-util-jsn and lualibs-util-zip
 
 
 ## Step 4

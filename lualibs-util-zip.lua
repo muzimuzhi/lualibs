@@ -673,4 +673,4 @@ end
 
 zipfiles.gunzipfile = gzip.load
 
-return zipfiles
+-- return zipfiles
