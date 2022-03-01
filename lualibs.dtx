@@ -322,12 +322,11 @@ and lualibs-extended.lua.
 %   lualibs-io.lua            & l-io.lua       & reading and writing files      \\
 %   lualibs-os.lua            & l-os.lua       & platform specific code         \\
 %   lualibs-file.lua          & l-file.lua     & filesystem operations          \\
-%   lualibs-gzip.lua          & l-gzip.lua     & wrapper for \identifier{lgzip} \\
 %   lualibs-md5.lua           & l-md5.lua      & checksum functions             \\
 %   lualibs-dir.lua           & l-dir.lua      & directory handling             \\
 %   lualibs-unicode.lua       & l-unicode.lua  & utf and unicode                \\
 %   lualibs-url.lua           & l-url.lua      & url handling                   \\
-%   lualibs-set.lua           & l-set.lua      & sets                           \\[1ex]
+%   lualibs-set.lua           & l-set.lua      & sets                           \\
 %  \end{tabular}
 %  \label{tab:basic}
 %  \hrule
@@ -358,7 +357,8 @@ and lualibs-extended.lua.
 %   lualibs-util-deb.lua      & util-deb.lua   & extra |debug| functionality      \\
 %   lualibs-util-tpl.lua      & util-tpl.lua   & templating                       \\
 %   lualibs-util-sta.lua      & util-sta.lua   & stacker (e.~g. for \abbrev{pdf}) \\
-%   lualibs-util-jsn.lua      & util-jsn.lua   & conversion to and from json      \\[1ex]
+%   lualibs-util-jsn.lua      & util-jsn.lua   & conversion to and from json      \\
+%   lualibs-util-zip.lua      & util-zip.lua   & compression and zip files        \\[1ex]
 %  \end{tabular}
 %  \label{tab:extended}
 %  \hrule
@@ -622,7 +622,6 @@ if loaded == false then
   loadmodule("lualibs-io.lua")
   loadmodule("lualibs-os.lua")
   loadmodule("lualibs-file.lua")
-  loadmodule("lualibs-gzip.lua")
   loadmodule("lualibs-md5.lua")
   loadmodule("lualibs-dir.lua")
   loadmodule("lualibs-unicode.lua")
@@ -797,6 +796,7 @@ if loaded == false then
   loadmodule("lualibs-util-deb.lua")--- extra debugging
   loadmodule("lualibs-util-tpl.lua")--- templating
   loadmodule("lualibs-util-sta.lua")--- stacker (for writing pdf)
+  loadmodule("lualibs-util-zip.lua")--- compression and zip files
 end
 
 unfake_context() --- TODO check if this works at runtime

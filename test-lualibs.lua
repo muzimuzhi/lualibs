@@ -3,7 +3,6 @@
 local luafiles = {
   "lualibs-boolean.lua",   "lualibs-compat.lua",
   "lualibs-dir.lua",       "lualibs-file.lua",
-  "lualibs-gzip.lua",
   "lualibs-function.lua",  "lualibs-io.lua",
   "lualibs-lpeg.lua",      "lualibs-lua.lua",
   "lualibs-math.lua",      "lualibs-md5.lua",
@@ -16,8 +15,8 @@ local luafiles = {
   "lualibs-util-jsn.lua",  "lualibs-util-lua.lua",
   "lualibs-util-prs.lua",  "lualibs-util-sta.lua",
   "lualibs-util-sto.lua",  "lualibs-util-str.lua",
-  "lualibs-util-tab.lua",
-  "lualibs-util-tpl.lua",  "lualibs.lua",
+  "lualibs-util-tab.lua",  "lualibs-util-tpl.lua",
+  "lualibs-util-zip.lua",  "lualibs.lua",
   "lualibs-basic.lua",     "lualibs-basic-merged.lua",
   "lualibs-extended.lua",  "lualibs-extended-merged.lua",
 }

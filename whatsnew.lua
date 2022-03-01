@@ -48,7 +48,6 @@ local filenames = {
     "dir",
     "file",
     "function",
-    "gzip",
     "io",
     "lpeg",
     "lua",
@@ -78,6 +77,7 @@ local filenames = {
     "str",
     "tab",
     "tpl",
+    "zip",
   },
 }
 
