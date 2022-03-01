@@ -68,6 +68,7 @@ See the 'NEWS' file for version history.
 |    lualibs-util-jsn.lua            | tex/luatex/lualibs/lualibs-util-jsn.lua
 |    lualibs-util-lua.lua            | tex/luatex/lualibs/lualibs-util-lua.lua
 |    lualibs-util-prs.lua            | tex/luatex/lualibs/lualibs-util-prs.lua
+|    lualibs-util-sac.lua            | tex/luatex/lualibs/lualibs-util-sac.lua
 |    lualibs-util-sta.lua            | tex/luatex/lualibs/lualibs-util-sta.lua
 |    lualibs-util-sto.lua            | tex/luatex/lualibs/lualibs-util-sto.lua
 |    lualibs-util-str.lua            | tex/luatex/lualibs/lualibs-util-str.lua

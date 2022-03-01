@@ -346,6 +346,7 @@ and lualibs-extended.lua.
 %  \vskip1em
 %  \begin{tabular}{l l l}
 %   \identifier{lualibs} name & \CONTEXT name  & primary purpose                  \\[1ex]
+%   lualibs-util-sac.lua      & util-sac.lua   & string based file readers        \\
 %   lualibs-util-str.lua      & util-str.lua   & extra |string| functions         \\
 %   lualibs-util-fil.lua      & util-fil.lua   & extra |file| functions           \\
 %   lualibs-util-tab.lua      & util-tab.lua   & extra |table| functions          \\
@@ -776,6 +777,7 @@ else
 end
 
 if loaded == false then
+  loadmodule("lualibs-util-sac.lua")--- streams: string based file parsers
   loadmodule("lualibs-util-str.lua")--- string formatters (fast)
   loadmodule("lualibs-util-fil.lua")--- extra file helpers
   loadmodule("lualibs-util-tab.lua")--- extended table operations

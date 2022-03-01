@@ -72,6 +72,7 @@ local filenames = {
     "jsn",
     "lua",
     "prs",
+    "sac",
     "sta",
     "sto",
     "str",
