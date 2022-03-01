@@ -55,9 +55,13 @@ local nobracket   = 1 - (lbracket + rbracket)
 
 local escape, left, right = P("\\"), P('{'), P('}')
 
+-- lpegpatterns.balanced = P {
+--     [1] = ((escape * (left+right)) + (1 - (left+right)) + V(2))^0,
+--     [2] = left * V(1) * right
+-- }
 lpegpatterns.balanced = P {
-    [1] = ((escape * (left+right)) + (1 - (left+right)) + V(2))^0,
-    [2] = left * V(1) * right
+    ((escape * (left+right)) + (1 - (left+right)) + V(2))^0,
+    left * V(1) * right
 }
 
 local nestedbraces   = P { lbrace   * (nobrace   + V(1))^0 * rbrace }
@@ -67,11 +71,12 @@ local spaces         = space^0
 local argument       = Cs((lbrace/"") * ((nobrace + nestedbraces)^0) * (rbrace/""))
 local content        = (1-endofstring)^0
 
-lpegpatterns.nestedbraces  = nestedbraces  -- no capture
-lpegpatterns.nestedparents = nestedparents -- no capture
-lpegpatterns.nested        = nestedbraces  -- no capture
-lpegpatterns.argument      = argument      -- argument after e.g. =
-lpegpatterns.content       = content       -- rest after e.g =
+lpegpatterns.nestedbraces   = nestedbraces   -- no capture
+lpegpatterns.nestedparents  = nestedparents  -- no capture
+lpegpatterns.nestedbrackets = nestedbrackets -- no capture
+lpegpatterns.nested         = nestedbraces   -- no capture
+lpegpatterns.argument       = argument       -- argument after e.g. =
+lpegpatterns.content        = content        -- rest after e.g =
 
 local value     = lbrace * C((nobrace + nestedbraces)^0) * rbrace
                 + C((nestedbraces + (1-comma))^0)
@@ -568,9 +573,9 @@ end
 -- "1","2","3","4"
 -- "5","6","7","8"
 -- ]]
---
+
 -- local mycsvsplitter = parsers.csvsplitter { numbers = true }
---
+
 -- local list = mycsvsplitter(crap) inspect(list)
 
 -- and this is a slightly patched version of a version posted by Philipp Gesang
@@ -639,7 +644,7 @@ local function ranger(first,last,n,action)
     end
 end
 
-local cardinal    = lpegpatterns.cardinal / tonumber
+local cardinal    = (lpegpatterns.hexadecimal + lpegpatterns.cardinal) / tonumber
 local spacers     = lpegpatterns.spacer^0
 local endofstring = lpegpatterns.endofstring
 
@@ -681,7 +686,7 @@ local spaces  = lpegpatterns.space^0
 local dummy   = function() end
 
 setmetatableindex(cache,function(t,k)
-    local separator = P(k)
+    local separator = S(k) -- was P
     local value     = (1-separator)^0
     local pattern   = spaces * C(value) * separator^0 * Cp()
     t[k] = pattern
