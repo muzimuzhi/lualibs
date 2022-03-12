@@ -1,6 +1,6 @@
 -- merged file : lualibs-extended-merged.lua
 -- parent file : lualibs-extended.lua
--- merge date  : 2022-03-01 15:45
+-- merge date  : 2022-03-12 14:16
 
 do -- begin closure to overcome local limits and interference
 
@@ -473,6 +473,33 @@ do
      end
     } )
     return t
+   end
+  end
+ end
+end
+if bit32 and not streams.tocardinal1 then
+ local extract=bit32.extract
+ local char=string.char
+    streams.tocardinal1=char
+ function streams.tocardinal2(n)   return char(extract(8,8),extract(0,8)) end
+ function streams.tocardinal3(n)   return char(extract(16,8),extract(8,8),extract(0,8)) end
+ function streams.tocardinal4(n)   return char(extract(24,8),extract(16,8),extract(8,8),extract(0,8)) end
+    streams.tocardinal1le=char
+ function streams.tocardinal2le(n) return char(extract(0,8),extract(8,8)) end
+ function streams.tocardinal3le(n) return char(extract(0,8),extract(8,8),extract(16,8)) end
+ function streams.tocardinal4le(n) return char(extract(0,8),extract(8,8),extract(16,8),extract(24,8)) end
+end
+if not streams.readcstring then
+ local readchar=streams.readchar
+ local concat=table.concat
+ function streams.readcstring(f)
+  local t={}
+  while true do
+   local c=readchar(f)
+   if c and c~="\0" then
+    t[#t+1]=c
+   else
+    return concat(t)
    end
   end
  end
@@ -4917,6 +4944,10 @@ local lshift=bit32.lshift
 local zlibdecompress=zlib.decompress
 local zlibdecompresssize=zlib.decompresssize
 local zlibchecksum=zlib.crc32
+if not CONTEXTLMTXMODE or CONTEXTLMTXMODE==0 then
+ local cs=zlibchecksum
+ zlibchecksum=function(str,n) return cs(n or 0,str) end
+end
 local decompress=function(source)   return zlibdecompress (source,-15)   end 
 local decompresssize=function(source,targetsize) return zlibdecompresssize(source,targetsize,-15) end 
 local calculatecrc=function(buffer,initial) return zlibchecksum   (initial or 0,buffer)   end
@@ -5336,7 +5367,11 @@ else
  local identifier="\x1F\x8B"
  local compress=zlib.compress
  local decompress=zlib.decompress
- local crc32=zlib.crc32
+ local zlibchecksum=zlib.crc32
+ if not CONTEXTLMTXMODE or CONTEXTLMTXMODE==0 then
+  local cs=zlibchecksum
+  zlibchecksum=function(str,n) return cs(n or 0,str) end
+ end
  local streams=utilities.streams
  local openstream=streams.openstring
  local closestream=streams.close
@@ -5376,7 +5411,7 @@ else
    tocardinal1(0xFF),
    (originalname or "unknownname").."\0",
    compress(str,level,nil,gzipwindow),
-   tocardinal4(crc32(str)),
+   tocardinal4(zlibchecksum(str)),
    tocardinal4(#str),
   }
  end
@@ -5426,6 +5461,5 @@ function gzip.decompress(s)
   return s
  end
 end
-zipfiles.gunzipfile=gzip.load
 
 end -- closure
