@@ -1,6 +1,6 @@
                         History of the lualibs package
-2021/03/12 v2.75/
-    * sync with Context current as of 2021/03/12.
+2022/10/04 v2.75/
+    * sync with Context current as of 2022/10/04.
     * add util-sac
     * Replace l-gzip with util-zip
 

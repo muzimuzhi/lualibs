@@ -1,6 +1,6 @@
 -- merged file : lualibs-extended-merged.lua
 -- parent file : lualibs-extended.lua
--- merge date  : 2022-03-12 14:16
+-- merge date  : 2022-10-04 17:16
 
 do -- begin closure to overcome local limits and interference
 
@@ -2487,6 +2487,21 @@ function table.ordered(t)
   return function() end
  end
 end
+function combine(target,source)
+ if target then
+  for k,v in next,source do
+   if type(v)=="table" then
+      target[k]=combine(target[k],source[k])
+   else
+      target[k]=v
+   end
+  end
+  return target
+ else
+  return source
+ end
+end
+table.combine=combine
 
 end -- closure
 
@@ -3131,9 +3146,18 @@ local endofstring=lpegpatterns.endofstring
 local stepper=spacers*(cardinal*(spacers*S(":-")*spacers*(cardinal+Cc(true) )+Cc(false) )*Carg(1)*Carg(2)/ranger*S(", ")^0 )^1
 local stepper=spacers*(cardinal*(spacers*S(":-")*spacers*(cardinal+(P("*")+endofstring)*Cc(true) )+Cc(false) )*Carg(1)*Carg(2)/ranger*S(", ")^0 )^1*endofstring 
 function parsers.stepper(str,n,action)
+ local ts=type(str)
  if type(n)=="function" then
-  lpegmatch(stepper,str,1,false,n or print)
- else
+  if ts=="number" then
+   n(str)
+  elseif ts=="table" then
+   for i=1,#str do
+    n(str[i])
+   end
+  else
+   lpegmatch(stepper,str,1,false,n or print)
+  end
+ elseif ts=="string" then
   lpegmatch(stepper,str,1,n,action or print)
  end
 end
@@ -3231,8 +3255,11 @@ local p_year=lpegpatterns.digit^4/tonumber
 local pattern=Cf(Ct("")*(
   (Cg(Cc("year")*p_year)*S("-/")*Cg(Cc("month")*cardinal)*S("-/")*Cg(Cc("day")*cardinal)
   )+(Cg(Cc("day")*cardinal)*S("-/")*Cg(Cc("month")*cardinal)*S("-/")*Cg(Cc("year")*p_year)
+  )+(Cg(Cc("year")*p_year)*S("-/")*Cg(Cc("month")*cardinal)
+  )+(Cg(Cc("month")*cardinal)*S("-/")*Cg(Cc("year")*p_year)
   )
- )*P(" ")*Cg(Cc("hour")*cardinal)*P(":")*Cg(Cc("min")*cardinal)*(P(":")*Cg(Cc("sec")*cardinal))^-1
+ )*(
+   P(" ")*Cg(Cc("hour")*cardinal)*P(":")*Cg(Cc("min")*cardinal)*(P(":")*Cg(Cc("sec")*cardinal))^-1+P(-1) )
 ,rawset)
 lpegpatterns.splittime=pattern
 function parsers.totime(str)
@@ -3646,6 +3673,8 @@ do
        k=lpegmatch(escaper,k) or k
        v=lpegmatch(escaper,v) or v
        n=n+1 t[n]=f_key_val_str(depth,k,v)
+      elseif i>1 then
+       n=n-1
       end
      elseif tv=="table" then
       local l=#v
@@ -3661,6 +3690,8 @@ do
        end
       elseif next(v) then
        tojsonpp(v,k,depth,level+1,0)
+      elseif i>1 then
+       n=n-1
       end
      elseif tv=="boolean" then
       if tk=="number" then
@@ -3678,6 +3709,8 @@ do
        else
         t[n]=f_key_val_nop(depth,k)
        end
+      elseif i>1 then
+       n=n-1
       end
      else
       if tk=="number" then
@@ -3687,6 +3720,8 @@ do
        k=lpegmatch(escaper,k) or k
        n=n+1
        t[n]=f_key_val_null(depth,k)
+      elseif i>1 then
+       n=n-1
       end
      end
     end
@@ -4517,6 +4552,22 @@ local function showtraceback(rep)
  end
 end
 debugger.showtraceback=showtraceback
+if luac then
+ local show,dump=luac.print,string.dump
+ function luac.inspect(v)
+  if type(v)=="function" then
+   local ok,str=xpcall(dump,function() end,v)
+   if ok then
+    v=str
+   end
+  end
+  if type(v)=="string" then
+   show(v,true)
+  else
+   print(v)
+  end
+ end
+end
 
 end -- closure
 
