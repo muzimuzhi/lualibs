@@ -978,3 +978,43 @@ end
 --         return remove(t,random(1,n))
 --     end
 -- end
+
+function combine(target,source)
+    -- no copy so if that is needed one needs to deepcopy source first
+    if target then
+        for k, v in next, source do
+            if type(v) == "table" then
+               target[k] = combine(target[k],source[k])
+            else
+               target[k] = v
+            end
+        end
+        return target
+    else
+        return source
+    end
+end
+
+table.combine = combine
+
+-- If needed we can add something (some discussion on the list but I'm not sure if
+-- it makes sense because merging such mixed tables is quite unusual.
+--
+-- function table.himerged(...)
+--     local result = { }
+--     local r      = 0
+--     for i=1,select("#",...) do
+--         local s = select(i,...)
+--         if s then
+--             for k, v in next, s do
+--                 if type(k) == "number"  then
+--                     r = r + 1
+--                     result[r] = v
+--                 else
+--                     result[k] = v
+--                 end
+--             end
+--         end
+--     end
+--     return result
+-- end
