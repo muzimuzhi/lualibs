@@ -4,3 +4,5 @@ lualibs.pdf
 *.aux
 build/*
 lualibs-ctan.curlopt
+lualibs-ctan.zip
+lualibs.tds.zip
